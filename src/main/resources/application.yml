@@ -32,3 +32,15 @@ jwt:
   refresh-token-key: ${REFRESH_TOKEN_KEY}
   access-token-expires: 900000        # 15?
   refresh-token-expires: 1209600000   # 14?
+
+
+thirdparty:
+  ncp:
+    service-id: ${NCP_SERVICE_ID}
+    access-key: ${NCP_ACCESS_KEY}
+    secret-key: ${NCP_SECRET_KEY}
+
+cors:
+  allowed-origins:
+    - "https://www.광탈페.kr"
+    - "Https://광탈페.kr"

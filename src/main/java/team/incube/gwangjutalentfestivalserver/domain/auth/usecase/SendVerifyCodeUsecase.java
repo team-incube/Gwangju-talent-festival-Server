@@ -13,13 +13,12 @@ import team.incube.gwangjutalentfestivalserver.domain.user.repository.UserReposi
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.adapter.SmsAdapter;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.dto.SendSmsRequest;
-import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsContentType;
+import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsMessage;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsType;
 import team.incube.gwangjutalentfestivalserver.global.util.RandomUtil;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,17 +58,18 @@ public class SendVerifyCodeUsecase {
 
 		verifyCodeRepository.save(verifyCodeEntity);
 
-//		SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
-//				.files(List.of())
-//				.contentType(SmsContentType.COMM)
-//				.type(SmsType.SMS)
-//				.build();
-//		// TODO 수정해야함
-//
-//		smsAdapter.sendSms(sendSmsRequest);
+		SmsMessage smsMessage = SmsMessage.builder()
+			.to(request.getPhoneNumber())
+			.build();
 
-		System.out.println("인증번호 전송됨");
-		System.out.println(code);
+		SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+				.type(SmsType.SMS)
+				.from("01030609369")
+				.content("광주탈렌트페스티벌 인증 메일 발송\n[ " + code + " ]")
+				.messages(List.of(smsMessage))
+				.build();
+
+		smsAdapter.sendSms(sendSmsRequest);
 
 		verifyCount.incrementCount();
 	}

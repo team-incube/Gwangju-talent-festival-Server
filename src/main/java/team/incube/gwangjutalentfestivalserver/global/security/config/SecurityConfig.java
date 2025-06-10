@@ -3,6 +3,7 @@ package team.incube.gwangjutalentfestivalserver.global.security.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import team.incube.gwangjutalentfestivalserver.domain.user.enums.Role;
+import team.incube.gwangjutalentfestivalserver.global.properties.CorsProperties;
 import team.incube.gwangjutalentfestivalserver.global.security.filter.JwtFilter;
 import team.incube.gwangjutalentfestivalserver.global.security.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtProvider jwtProvider;
+	private final CorsProperties corsProperties;
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,7 +51,7 @@ public class SecurityConfig {
 		CorsConfiguration corsConfigurationSource = new CorsConfiguration();
 		corsConfigurationSource.addAllowedHeader("*");
 		corsConfigurationSource.addAllowedMethod("*");
-		corsConfigurationSource.addAllowedOriginPattern("*");
+		corsConfigurationSource.addAllowedOrigin(corsProperties.getAllowedOrigins().toArray(new String[0]));
 		corsConfigurationSource.setAllowCredentials(true);
 		corsConfigurationSource.addExposedHeader("Authorization");
 
