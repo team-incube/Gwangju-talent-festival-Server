@@ -1,8 +1,9 @@
-package team.incube.gwangjutalentfestivalserver.global.security.configuration;
+package team.incube.gwangjutalentfestivalserver.global.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import team.incube.gwangjutalentfestivalserver.domain.user.enums.Role;
+import team.incube.gwangjutalentfestivalserver.global.properties.CorsProperties;
 import team.incube.gwangjutalentfestivalserver.global.security.filter.JwtFilter;
 import team.incube.gwangjutalentfestivalserver.global.security.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtProvider jwtProvider;
+	private final CorsProperties corsProperties;
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,22 +42,8 @@ public class SecurityConfig {
 			.httpBasic(AbstractHttpConfigurer::disable)
 			.sessionManagement (it ->
 				it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			).cors(it -> it.configurationSource(corsConfig()))
+			)
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 			.build();
-	}
-
-	CorsConfigurationSource corsConfig() {
-		CorsConfiguration corsConfigurationSource = new CorsConfiguration();
-		corsConfigurationSource.addAllowedHeader("*");
-		corsConfigurationSource.addAllowedMethod("*");
-		corsConfigurationSource.addAllowedOriginPattern("*");
-		corsConfigurationSource.setAllowCredentials(true);
-		corsConfigurationSource.addExposedHeader("Authorization");
-
-		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-
-		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfigurationSource);
-		return urlBasedCorsConfigurationSource;
 	}
 }

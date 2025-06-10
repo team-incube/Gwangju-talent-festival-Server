@@ -11,15 +11,15 @@ import team.incube.gwangjutalentfestivalserver.domain.auth.repository.VerifyCode
 import team.incube.gwangjutalentfestivalserver.domain.auth.repository.VerifyCountRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.repository.UserRepository;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
+import team.incube.gwangjutalentfestivalserver.global.properties.NcpProperties;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.adapter.SmsAdapter;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.dto.SendSmsRequest;
-import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsContentType;
+import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsMessage;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsType;
 import team.incube.gwangjutalentfestivalserver.global.util.RandomUtil;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class SendVerifyCodeUsecase {
 	private final VerifyCountRepository verifyCountRepository;
 	private final SmsAdapter smsAdapter;
 	private final RandomUtil randomUtil;
+	private final NcpProperties ncpProperties;
 
 	@Transactional
 	public void execute(SendVerifyCodeRequest request) {
@@ -59,17 +60,18 @@ public class SendVerifyCodeUsecase {
 
 		verifyCodeRepository.save(verifyCodeEntity);
 
-//		SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
-//				.files(List.of())
-//				.contentType(SmsContentType.COMM)
-//				.type(SmsType.SMS)
-//				.build();
-//		// TODO 수정해야함
-//
-//		smsAdapter.sendSms(sendSmsRequest);
+		SmsMessage smsMessage = SmsMessage.builder()
+			.to(request.getPhoneNumber())
+			.build();
 
-		System.out.println("인증번호 전송됨");
-		System.out.println(code);
+		SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+				.type(SmsType.SMS)
+				.from(ncpProperties.getPhoneNumber())
+				.content("광주탈렌트페스티벌 인증 메일 발송\n[ " + code + " ]")
+				.messages(List.of(smsMessage))
+				.build();
+
+		smsAdapter.sendSms(sendSmsRequest);
 
 		verifyCount.incrementCount();
 	}
