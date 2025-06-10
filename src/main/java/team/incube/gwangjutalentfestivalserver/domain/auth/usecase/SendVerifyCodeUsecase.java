@@ -11,6 +11,7 @@ import team.incube.gwangjutalentfestivalserver.domain.auth.repository.VerifyCode
 import team.incube.gwangjutalentfestivalserver.domain.auth.repository.VerifyCountRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.repository.UserRepository;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
+import team.incube.gwangjutalentfestivalserver.global.properties.NcpProperties;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.adapter.SmsAdapter;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.dto.SendSmsRequest;
 import team.incube.gwangjutalentfestivalserver.global.thirdparty.sms.model.SmsMessage;
@@ -28,6 +29,7 @@ public class SendVerifyCodeUsecase {
 	private final VerifyCountRepository verifyCountRepository;
 	private final SmsAdapter smsAdapter;
 	private final RandomUtil randomUtil;
+	private final NcpProperties ncpProperties;
 
 	@Transactional
 	public void execute(SendVerifyCodeRequest request) {
@@ -64,7 +66,7 @@ public class SendVerifyCodeUsecase {
 
 		SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
 				.type(SmsType.SMS)
-				.from("01030609369")
+				.from(ncpProperties.getPhoneNumber())
 				.content("광주탈렌트페스티벌 인증 메일 발송\n[ " + code + " ]")
 				.messages(List.of(smsMessage))
 				.build();

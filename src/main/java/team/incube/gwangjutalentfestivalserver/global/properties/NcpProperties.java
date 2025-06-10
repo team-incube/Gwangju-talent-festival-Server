@@ -15,6 +15,7 @@ public class NcpProperties {
     private String serviceId;
     private String accessKey;
     private String secretKey;
+    private String phoneNumber;
 }
 
 

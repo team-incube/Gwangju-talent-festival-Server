@@ -39,6 +39,7 @@ thirdparty:
     service-id: ${NCP_SERVICE_ID}
     access-key: ${NCP_ACCESS_KEY}
     secret-key: ${NCP_SECRET_KEY}
+    phone-number: ${NCP_PHONE_NUMBER}
 
 cors:
   allowed-origins:
