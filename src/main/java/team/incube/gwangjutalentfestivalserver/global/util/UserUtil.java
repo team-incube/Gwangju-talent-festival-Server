@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class UserUtil {
 	private final UserRepository userRepository;
 
-	User getUser() {
+	public User getUser() {
 		String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
 		return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
 			new HttpException(HttpStatus.NOT_FOUND, "해당하는 회원을 찾을 수 없습니다.")
