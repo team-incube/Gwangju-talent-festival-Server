@@ -1,4 +1,4 @@
-package team.incube.gwangjutalentfestivalserver.global.jackson.configuration;
+package team.incube.gwangjutalentfestivalserver.global.serialization.config;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;

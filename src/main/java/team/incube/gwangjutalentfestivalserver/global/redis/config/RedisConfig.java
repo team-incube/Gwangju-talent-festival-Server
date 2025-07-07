@@ -1,4 +1,4 @@
-package team.incube.gwangjutalentfestivalserver.global.database.configuration;
+package team.incube.gwangjutalentfestivalserver.global.redis.config;
 
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
