@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInResponse {
+public class LoginResponse {
 	private String accessToken;
 	private LocalDateTime accessTokenExpiredAt;
 	private String refreshToken;

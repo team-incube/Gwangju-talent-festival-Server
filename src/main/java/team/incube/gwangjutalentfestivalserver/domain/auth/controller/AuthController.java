@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.SendVerifyCodeRequest;
-import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.SignInRequest;
-import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.SignUpRequest;
+import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.LoginRequest;
+import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.JoinRequest;
 import team.incube.gwangjutalentfestivalserver.domain.auth.dto.response.RefreshTokenResponse;
-import team.incube.gwangjutalentfestivalserver.domain.auth.dto.response.SignInResponse;
+import team.incube.gwangjutalentfestivalserver.domain.auth.dto.response.LoginResponse;
 import team.incube.gwangjutalentfestivalserver.domain.auth.usecase.*;
 
 @RestController
@@ -31,17 +31,17 @@ public class AuthController {
 
 	@PostMapping("/join")
 	public ResponseEntity<Void> joinUser(
-		@Valid @RequestBody SignUpRequest signUpRequest
+		@Valid @RequestBody JoinRequest joinRequest
 	) {
-		joinUsecase.execute(signUpRequest);
+		joinUsecase.execute(joinRequest);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<SignInResponse> login(
-		@Valid @RequestBody SignInRequest signInRequest
+	public ResponseEntity<LoginResponse> login(
+		@Valid @RequestBody LoginRequest loginRequest
 	) {
-		SignInResponse response = loginUsecase.execute(signInRequest);
+		LoginResponse response = loginUsecase.execute(loginRequest);
 		return ResponseEntity.ok(response);
 	}
 

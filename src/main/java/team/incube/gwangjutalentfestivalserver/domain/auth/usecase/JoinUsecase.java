@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.SignUpRequest;
+import team.incube.gwangjutalentfestivalserver.domain.auth.dto.request.JoinRequest;
 import team.incube.gwangjutalentfestivalserver.domain.auth.entity.VerifyCode;
 import team.incube.gwangjutalentfestivalserver.domain.auth.repository.VerifyCodeRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
@@ -21,7 +21,7 @@ public class JoinUsecase {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public void execute(SignUpRequest request) {
+	public void execute(JoinRequest request) {
 		String phoneNumber = request.getPhoneNumber();
 
 		if (userRepository.existsByPhoneNumber(phoneNumber)) {

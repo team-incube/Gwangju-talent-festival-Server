@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInRequest {
+public class LoginRequest {
 	@Pattern(
 		regexp = "^01[0-9]{8,9}$",
 		message = "유효한 휴대폰 번호 형식이 아닙니다."
