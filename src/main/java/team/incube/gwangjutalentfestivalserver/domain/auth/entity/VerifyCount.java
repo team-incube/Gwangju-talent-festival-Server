@@ -22,7 +22,7 @@ public class VerifyCount {
 	private String phoneNumber;
 
 	@Column(nullable = false)
-	private Integer count = 0;
+	private Integer count;
 
 	public void incrementCount(){
 		count++;
