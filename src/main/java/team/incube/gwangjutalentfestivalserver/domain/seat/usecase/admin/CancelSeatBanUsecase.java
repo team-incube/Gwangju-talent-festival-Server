@@ -20,12 +20,10 @@ public class CancelSeatBanUsecase {
 	@Transactional
 	public void execute(CancelSeatBanRequest request) {
 		SeatBanId seatBanId = request.toSeatBanId();
+		SeatBan seatBan = seatBanRepository.findById(seatBanId).orElseThrow(() ->
+			new HttpException(HttpStatus.BAD_REQUEST, "이미 금지되지 않은 상태의 자리입니다.")
+		);
 
-		Optional<SeatBan> seatBan = seatBanRepository.findById(seatBanId);
-		if(seatBan.isEmpty()) {
-			throw new HttpException(HttpStatus.BAD_REQUEST, "이미 금지되지 않은 상태의 자리입니다.");
-		}
-
-		seatBanRepository.delete(seatBan.get());
+		seatBanRepository.delete(seatBan);
 	}
 }
