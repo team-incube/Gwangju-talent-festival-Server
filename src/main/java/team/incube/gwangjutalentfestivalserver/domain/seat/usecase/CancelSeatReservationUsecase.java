@@ -21,13 +21,11 @@ public class CancelSeatReservationUsecase {
 	@Transactional
 	public void execute() {
 		User currentUser = userUtil.getUser();
-		Optional<SeatReservation> seatReservation =
-			seatReservationRepository.findByUser(currentUser);
+		SeatReservation seatReservation =
+			seatReservationRepository.findByUser(currentUser).orElseThrow(() ->
+				new HttpException(HttpStatus.BAD_REQUEST, "예약된 좌석이 없습니다.")
+			);
 
-		if(seatReservation.isEmpty()) {
-			throw new HttpException(HttpStatus.BAD_REQUEST, "예약된 좌석이 없습니다.");
-		}
-
-		seatReservationRepository.delete(seatReservation.get());
+		seatReservationRepository.delete(seatReservation);
 	}
 }
