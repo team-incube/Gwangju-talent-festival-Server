@@ -1,6 +1,5 @@
 package team.incube.gwangjutalentfestivalserver.domain.auth.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequest {
+public class JoinRequest {
 	@Pattern(
 		regexp = "^01[0-9]{8,9}$",
 		message = "유효한 휴대폰 번호 형식이 아닙니다."
