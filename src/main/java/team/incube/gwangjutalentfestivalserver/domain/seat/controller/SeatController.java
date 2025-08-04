@@ -4,11 +4,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.BanSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.CancelSeatBanRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.ReserveSeatRequest;
-import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.CancelSeatReservationUsecase;
-import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.ReserveSeatUsecase;
+import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetAllSeatsResponse;
+import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetSeatResponse;
+import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetSeatsBySectionResponse;
+import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.*;
 import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.admin.BanSeatUsecase;
 import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.admin.CancelSeatBanUsecase;
 
@@ -20,6 +23,10 @@ public class SeatController {
 	private final CancelSeatReservationUsecase cancelSeatReservationUsecase;
 	private final BanSeatUsecase banSeatUsecase;
 	private final CancelSeatBanUsecase cancelSeatBanUsecase;
+	private final ConnectSseSeatEventUsecase connectSseSeatEventUsecase;
+	private final FindAllSeatsUsecase findAllSeatsUsecase;
+	private final FindSeatsBySectionUsecase findSeatsBySectionUsecase;
+	private final FindSeatByCurrentUserUsecase findSeatByCurrentUserUsecase;
 
 	@PostMapping
 	public ResponseEntity<Void> reserveSeat(
@@ -49,5 +56,28 @@ public class SeatController {
 	){
 		cancelSeatBanUsecase.execute(cancelSeatBanRequest);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/myself")
+	public ResponseEntity<GetSeatResponse> myself() {
+		GetSeatResponse response = findSeatByCurrentUserUsecase.execute();
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping
+	public ResponseEntity<GetSeatsBySectionResponse> getBySection(@RequestParam String section) {
+		GetSeatsBySectionResponse response = findSeatsBySectionUsecase.execute(section.charAt(0));
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/all")
+	public ResponseEntity<GetAllSeatsResponse> getAllSeats() {
+		GetAllSeatsResponse response = findAllSeatsUsecase.execute();
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/changes")
+	public SseEmitter connectSeatChangeEvent() {
+		return connectSseSeatEventUsecase.execute();
 	}
 }
