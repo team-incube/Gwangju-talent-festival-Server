@@ -1,12 +1,15 @@
 package team.incube.gwangjutalentfestivalserver.domain.seat.usecase.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.BanSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatBan;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.embeddable.SeatBanId;
+import team.incube.gwangjutalentfestivalserver.domain.seat.enums.SeatEventType;
+import team.incube.gwangjutalentfestivalserver.domain.seat.event.SeatChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatBanRepository;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 
@@ -14,6 +17,7 @@ import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 @RequiredArgsConstructor
 public class BanSeatUsecase {
 	private final SeatBanRepository seatBanRepository;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional
 	public void execute(BanSeatRequest request) {
@@ -26,5 +30,11 @@ public class BanSeatUsecase {
 
 		SeatBan newBan = new SeatBan(seatBanId);
 		seatBanRepository.save(newBan);
+
+		applicationEventPublisher.publishEvent(new SeatChangeEvent(
+				request.getSeatSection(),
+				request.getSeatNumber(),
+				SeatEventType.BANNED
+		));
 	}
 }
