@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.BanSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatBan;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.embeddable.SeatBanId;
-import team.incube.gwangjutalentfestivalserver.domain.seat.enums.SeatEventType;
 import team.incube.gwangjutalentfestivalserver.domain.seat.event.SeatChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatBanRepository;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
@@ -34,7 +33,7 @@ public class BanSeatUsecase {
 		applicationEventPublisher.publishEvent(new SeatChangeEvent(
 				request.getSeatSection(),
 				request.getSeatNumber(),
-				SeatEventType.BANNED
+				false
 		));
 	}
 }
