@@ -1,11 +1,13 @@
 package team.incube.gwangjutalentfestivalserver.domain.seat.usecase;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.ReserveSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
+import team.incube.gwangjutalentfestivalserver.domain.seat.event.SeatChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatBanRepository;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatReservationRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
@@ -22,6 +24,7 @@ public class ReserveSeatUsecase {
 	private final SeatReservationRepository seatReservationRepository;
 	private final SeatBanRepository seatBanRepository;
 	private final SeatUtil seatUtil;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional
 	public void execute(ReserveSeatRequest request) {
@@ -63,5 +66,11 @@ public class ReserveSeatUsecase {
 			.build();
 
 		seatReservationRepository.save(seatReservation);
+
+		applicationEventPublisher.publishEvent(new SeatChangeEvent(
+				seatSection.toString(),
+				seatNumber,
+				false
+		));
 	}
 }

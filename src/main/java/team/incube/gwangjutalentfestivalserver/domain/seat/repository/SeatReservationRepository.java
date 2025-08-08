@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Lock;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SeatReservationRepository extends JpaRepository<SeatReservation, Long> {
@@ -17,4 +18,6 @@ public interface SeatReservationRepository extends JpaRepository<SeatReservation
     Optional<SeatReservation> findByUser(User user);
 
     void deleteByUser(User user);
+
+    List<SeatReservation> findBySeatSection(Character seatSection);
 }

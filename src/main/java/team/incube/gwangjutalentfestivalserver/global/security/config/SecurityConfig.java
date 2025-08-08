@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import team.incube.gwangjutalentfestivalserver.domain.user.enums.Role;
 import team.incube.gwangjutalentfestivalserver.global.security.filter.JwtFilter;
+import team.incube.gwangjutalentfestivalserver.global.security.filter.SseAuthenticationFilter;
 import team.incube.gwangjutalentfestivalserver.global.security.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		JwtFilter jwtFilter = new JwtFilter(jwtProvider);
+		SseAuthenticationFilter sseAuthenticationFilter = new SseAuthenticationFilter(jwtProvider);
 
 		return http
 			.authorizeHttpRequests(it -> it
@@ -31,6 +33,10 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.DELETE, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				.requestMatchers(HttpMethod.POST, "/seat/ban").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.DELETE, "/seat/ban").hasAuthority(Role.ROLE_ADMIN.name())
+				.requestMatchers(HttpMethod.GET, "/seat/myself").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/seat/all").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/seat/changes").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				// 상태 확인
 				.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 			)
@@ -40,6 +46,7 @@ public class SecurityConfig {
 			.sessionManagement (it ->
 				it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
+			.addFilterBefore(sseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}
