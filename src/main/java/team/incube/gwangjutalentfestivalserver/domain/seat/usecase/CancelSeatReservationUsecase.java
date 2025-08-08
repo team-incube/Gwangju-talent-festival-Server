@@ -6,14 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
-import team.incube.gwangjutalentfestivalserver.domain.seat.enums.SeatEventType;
 import team.incube.gwangjutalentfestivalserver.domain.seat.event.SeatChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatReservationRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 import team.incube.gwangjutalentfestivalserver.global.util.UserUtil;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +32,7 @@ public class CancelSeatReservationUsecase {
 		applicationEventPublisher.publishEvent(new SeatChangeEvent(
 				seatReservation.getSeatSection().toString(),
 				seatReservation.getSeatNumber(),
-				SeatEventType.CANCELLED
+				false
 		));
 	}
 }
