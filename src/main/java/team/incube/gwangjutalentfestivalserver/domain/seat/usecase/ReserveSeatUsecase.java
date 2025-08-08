@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.ReserveSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
-import team.incube.gwangjutalentfestivalserver.domain.seat.enums.SeatEventType;
 import team.incube.gwangjutalentfestivalserver.domain.seat.event.SeatChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatBanRepository;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatReservationRepository;
@@ -71,7 +70,7 @@ public class ReserveSeatUsecase {
 		applicationEventPublisher.publishEvent(new SeatChangeEvent(
 				seatSection.toString(),
 				seatNumber,
-				SeatEventType.RESERVED
+				false
 		));
 	}
 }
