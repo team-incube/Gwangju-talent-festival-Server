@@ -30,4 +30,7 @@ public class Team {
 
     @Column(name = "star", nullable = false)
     private Integer star;
+
+    @Column(name = "total_score")
+    private Integer totalScore;
 }
