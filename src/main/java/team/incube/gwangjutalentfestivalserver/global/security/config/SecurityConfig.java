@@ -39,6 +39,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/seat/changes").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				// 상태 확인
 				.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+				// 공연 팀
+				.requestMatchers(HttpMethod.GET, "/team").permitAll()
 			)
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
