@@ -41,6 +41,12 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 				// 공연 팀
 				.requestMatchers(HttpMethod.GET, "/team").permitAll()
+				// 현장 투표
+				.requestMatchers(HttpMethod.POST, "/vote").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/vote/{teamId}").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/current").hasAuthority(Role.ROLE_ADMIN.name())
+				.requestMatchers(HttpMethod.POST, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
+				.requestMatchers(HttpMethod.DELETE, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
 			)
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
