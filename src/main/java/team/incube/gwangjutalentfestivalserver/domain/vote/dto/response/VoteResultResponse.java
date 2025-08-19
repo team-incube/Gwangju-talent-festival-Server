@@ -1,8 +1,14 @@
 package team.incube.gwangjutalentfestivalserver.domain.vote.dto.response;
 
-public record VoteResultResponse(
-        Long teamId,
-        String teamName,
-        int star
-) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class VoteResultResponse {
+    private Long teamId;
+    private String teamName;
+    private int star;
 }
