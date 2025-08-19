@@ -34,7 +34,7 @@ public class VoteParticipateUsecase {
             throw new HttpException(HttpStatus.BAD_REQUEST, "예약된 좌석이 없습니다.");
         }
 
-        Team team = teamRepository.findById(request.teamId())
+        Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다."));
 
         if (team.getTeamStatus() != TeamStatus.ONGOING) {
@@ -43,7 +43,7 @@ public class VoteParticipateUsecase {
 
         Vote vote = Vote.builder()
                 .team(team)
-                .star(request.star())
+                .star(request.getStar())
                 .build();
         voteRepository.save(vote);
 
