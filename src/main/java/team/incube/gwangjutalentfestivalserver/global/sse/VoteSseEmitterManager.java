@@ -30,7 +30,7 @@ public class VoteSseEmitterManager {
         return emitter;
     }
 
-    private void removeEmitter(Long teamId, SseEmitter emitter) {
+    public void removeEmitter(Long teamId, SseEmitter emitter) {
         List<SseEmitter> list = emitters.get(teamId);
         if (list != null) {
             list.remove(emitter);
