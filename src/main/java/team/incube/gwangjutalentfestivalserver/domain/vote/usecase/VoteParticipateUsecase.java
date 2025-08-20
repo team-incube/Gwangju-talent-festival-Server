@@ -47,18 +47,10 @@ public class VoteParticipateUsecase {
                 .build();
         voteRepository.save(vote);
 
-        int currentVoteCount = voteRepository.findByTeamId(team.getId())
-                .stream()
-                .mapToInt(Vote::getStar)
-                .sum();
-
-        team.setStar(currentVoteCount);
-        teamRepository.save(team);
-
         eventPublisher.publishEvent(new VoteChangeEvent(
                 team.getId(),
                 team.getTeamName(),
-                currentVoteCount
+                request.getStar()
         ));
     }
 }
