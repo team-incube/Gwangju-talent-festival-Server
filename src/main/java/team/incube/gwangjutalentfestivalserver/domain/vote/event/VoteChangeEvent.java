@@ -8,5 +8,5 @@ import lombok.Getter;
 public class VoteChangeEvent {
     private Long teamId;
     private String teamName;
-    private int currentVoteCount;
+    private int addStar;
 }
