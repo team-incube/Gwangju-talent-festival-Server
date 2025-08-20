@@ -20,14 +20,18 @@ public class VoteFinishEventListener {
     @Async("asyncExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onVoteFinish(VoteFinishEvent event) {
-        for (SseEmitter emitter : sseEmitterManager.getAllEmitters()) {
+        for (SseEmitter emitter : sseEmitterManager.getEmitters(event.getTeamId())) {
             try {
                 emitter.send(SseEmitter.event()
                         .name("VOTE_FINISH")
                         .data(event));
+                emitter.complete();
             } catch (IOException e) {
                 emitter.completeWithError(e);
+            } finally {
+                sseEmitterManager.removeEmitter(event.getTeamId(), emitter);
             }
         }
     }
 }
+
