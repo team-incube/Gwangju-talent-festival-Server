@@ -33,4 +33,16 @@ public class Team {
 
     @Column(name = "total_score")
     private Integer totalScore;
+
+    public void setStar(int star) {
+        this.star = star;
+    }
+
+    public void startVote() {
+        this.teamStatus = TeamStatus.ONGOING;
+    }
+
+    public void finishVote() {
+        this.teamStatus = TeamStatus.FINISHED;
+    }
 }
