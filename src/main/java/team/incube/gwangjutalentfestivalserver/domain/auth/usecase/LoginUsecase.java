@@ -46,7 +46,8 @@ public class LoginUsecase {
 				accessToken.getToken(),
 				accessToken.getExpiredAt(),
 				refreshToken.getToken(),
-				refreshToken.getExpiredAt()
+				refreshToken.getExpiredAt(),
+                user.getRole()
 		);
 	}
 
