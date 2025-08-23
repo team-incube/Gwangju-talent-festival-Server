@@ -25,13 +25,17 @@ public class Team {
     @Enumerated(EnumType.STRING)
     private TeamStatus teamStatus;
 
+    @Column(name = "perform_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TeamStatus performStatus;
+
     @Column(name = "event_year", nullable = false)
     private Integer eventYear;
 
     @Column(name = "star", nullable = false)
     private Integer star;
 
-    @Column(name = "total_score")
+    @Column(name = "total_score", nullable = false)
     private Integer totalScore;
 
     public void setStar(int star) {
@@ -44,5 +48,9 @@ public class Team {
 
     public void finishVote() {
         this.teamStatus = TeamStatus.FINISHED;
+    }
+
+    public void updatePerformStatus(TeamStatus performStatus) {
+        this.performStatus = performStatus;
     }
 }
