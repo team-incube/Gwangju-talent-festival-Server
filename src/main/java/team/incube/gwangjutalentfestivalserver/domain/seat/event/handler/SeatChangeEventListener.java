@@ -7,14 +7,14 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import team.incube.gwangjutalentfestivalserver.domain.seat.event.SeatChangeEvent;
-import team.incube.gwangjutalentfestivalserver.global.sse.SseEmitterManager;
+import team.incube.gwangjutalentfestivalserver.global.sse.SeatSseEmitterManager;
 
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class SeatChangeEventListener {
-    private final SseEmitterManager sseEmitterManager;
+    private final SeatSseEmitterManager sseEmitterManager;
 
     @Async("asyncExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
