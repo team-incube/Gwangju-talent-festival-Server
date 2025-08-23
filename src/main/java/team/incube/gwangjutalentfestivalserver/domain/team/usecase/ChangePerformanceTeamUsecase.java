@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.judge.event.JudgementTeamEvent;
 import team.incube.gwangjutalentfestivalserver.domain.team.entity.Team;
 import team.incube.gwangjutalentfestivalserver.domain.team.enums.TeamStatus;
@@ -18,8 +19,8 @@ public class ChangePerformanceTeamUsecase {
     private final TeamRepository teamRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    @Transactional
     public void execute(Long teamId) {
-        log.info("Team {} performance status changed to ONGOING", teamId);
         Team team = teamRepository.findById(teamId).orElseThrow(() ->
                 new HttpException(HttpStatus.NOT_FOUND, "해당하는 팀을 찾을 수 없습니다."));
 
