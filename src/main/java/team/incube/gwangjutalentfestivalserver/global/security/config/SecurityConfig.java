@@ -39,7 +39,7 @@ public class SecurityConfig {
 				// 상태 확인
 				.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 				// 공연 팀
-				.requestMatchers(HttpMethod.GET, "/team").permitAll()
+				.requestMatchers(HttpMethod.GET, "/team").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				// 현장 투표
 				.requestMatchers(HttpMethod.POST, "/vote").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
