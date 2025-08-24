@@ -17,7 +17,7 @@ public class FindSeatByCurrentUserUsecase {
     private final UserUtil userUtil;
     private final SeatReservationRepository seatReservationRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public GetSeatResponse execute() {
         User currentUser = userUtil.getUser();
         SeatReservation seatReservation =
