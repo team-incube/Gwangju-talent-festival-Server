@@ -46,6 +46,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/current").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.POST, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.DELETE, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
+				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/extract").hasAuthority(Role.ROLE_ADMIN.name())
 			)
             .cors(Customizer.withDefaults())
 			.csrf(AbstractHttpConfigurer::disable)
