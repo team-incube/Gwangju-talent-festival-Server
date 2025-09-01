@@ -5,11 +5,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatReservationRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
+import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,6 +31,10 @@ public class VoteRandomExtractUsecase {
                 .stream()
                 .map(SeatReservation::getUser)
                 .collect(Collectors.toList());
+
+        if (reservedUsers.isEmpty()) {
+            throw new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다.");
+        }
 
         Collections.shuffle(reservedUsers);
 
@@ -54,7 +60,7 @@ public class VoteRandomExtractUsecase {
             workbook.write(bos);
             return bos.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("엑셀 파일 생성 실패", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "엑셀 파일 생성 실패");
         }
     }
 }
