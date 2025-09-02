@@ -2,6 +2,7 @@ package team.incube.gwangjutalentfestivalserver.domain.seat.usecase;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetSeatsBySectionResponse;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatBan;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
@@ -21,6 +22,7 @@ public class FindSeatsBySectionUsecase {
     private final SeatBanRepository seatBanRepository;
     private final SeatUtil seatUtil;
 
+    @Transactional(readOnly = true)
     public GetSeatsBySectionResponse execute(Character section) {
         Integer seatLastNumber = seatUtil.getMaxSeats(section);
 

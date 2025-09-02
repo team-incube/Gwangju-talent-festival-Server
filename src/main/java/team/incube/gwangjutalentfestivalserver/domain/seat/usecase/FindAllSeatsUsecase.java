@@ -2,6 +2,7 @@ package team.incube.gwangjutalentfestivalserver.domain.seat.usecase;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetAllSeatsResponse;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetSeatsBySectionResponse;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatBan;
@@ -22,6 +23,7 @@ public class FindAllSeatsUsecase {
 
     private static final List<Character> SEAT_SECTIONS = List.of('A','B','C','D','E','F','G','H','I','J');
 
+    @Transactional(readOnly = true)
     public GetAllSeatsResponse execute() {
         List<SeatBan> seatBans = seatBanRepository.findAll();
         List<SeatReservation> seatReservations = seatReservationRepository.findAll();
