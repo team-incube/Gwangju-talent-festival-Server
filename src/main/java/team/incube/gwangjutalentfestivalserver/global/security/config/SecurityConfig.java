@@ -1,5 +1,6 @@
 package team.incube.gwangjutalentfestivalserver.global.security.config;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,8 @@ public class SecurityConfig {
 
 		return http
 			.authorizeHttpRequests(it -> it
+                // SSE 인증
+                .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
 				// 인증
 				.requestMatchers("/auth/**").permitAll()
 				// 예매
@@ -51,7 +54,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.DELETE, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/vote/{teamId}/extract").hasAuthority(Role.ROLE_ADMIN.name())
                 // 전문가 심사
-                .requestMatchers(HttpMethod.POST, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.PATCH, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/judge").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/judge/changes").hasAuthority(Role.ROLE_ADMIN.name())
