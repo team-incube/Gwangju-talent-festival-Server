@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import team.incube.gwangjutalentfestivalserver.domain.team.entity.Team;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 
 @Table(
@@ -38,4 +39,8 @@ public class SeatReservation {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 }

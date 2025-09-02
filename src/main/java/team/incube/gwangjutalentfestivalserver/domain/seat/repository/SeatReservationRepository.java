@@ -20,4 +20,6 @@ public interface SeatReservationRepository extends JpaRepository<SeatReservation
     void deleteByUser(User user);
 
     List<SeatReservation> findBySeatSection(Character seatSection);
+
+    List<SeatReservation> findAllByTeamId(Long teamId);
 }

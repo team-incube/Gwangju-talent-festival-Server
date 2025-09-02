@@ -31,8 +31,10 @@ spring:
 jwt:
   access-token-key: ${ACCESS_TOKEN_KEY}
   refresh-token-key: ${REFRESH_TOKEN_KEY}
-  access-token-expires: 900000        # 15?
-  refresh-token-expires: 1209600000   # 14?
+#  access-token-expires: 900000        # 15?
+#  refresh-token-expires: 1209600000   # 14?
+  access-token-expires: 1000000000000000000000000000
+  refresh-token-expires: 1000000000000000000000000000
 
 
 thirdparty:
