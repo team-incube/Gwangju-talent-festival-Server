@@ -32,9 +32,10 @@ public class FindJudgementByCurrentUserAndTeamIdUsecase {
 
         Judgement jm = judgementRepository.findByUserAndTeam(user, team).orElse(null);
 
-        int completionExpression   = jm != null ? jm.getCompletionExpression() : 0;
-        int creativityComposition  = jm != null ? jm.getCreativityComposition() : 0;
-        int stageMannerPerformance = jm != null ? jm.getStageMannerPerformance() : 0;
+        int completionExpression   = Optional.ofNullable(jm).map(Judgement::getCompletionExpression).orElse(0);
+        int creativityComposition  = Optional.ofNullable(jm).map(Judgement::getCreativityComposition).orElse(0);
+        int stageMannerPerformance = Optional.ofNullable(jm).map(Judgement::getStageMannerPerformance).orElse(0);
+
         boolean judged             = jm != null;
         boolean performed          = team.getPerformStatus() != TeamStatus.PENDING;
         int totalScore             = Optional.ofNullable(team.getTotalScore()).orElse(0);
