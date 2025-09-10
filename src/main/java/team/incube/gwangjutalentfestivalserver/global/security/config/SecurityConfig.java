@@ -1,5 +1,6 @@
 package team.incube.gwangjutalentfestivalserver.global.security.config;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,8 @@ public class SecurityConfig {
 
 		return http
 			.authorizeHttpRequests(it -> it
+                // SSE 인증
+                .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
 				// 인증
 				.requestMatchers("/auth/**").permitAll()
 				// 예매
@@ -40,13 +43,21 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 				// 공연 팀
 				.requestMatchers(HttpMethod.GET, "/team").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+                .requestMatchers(HttpMethod.GET, "/team/ranking").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/team").hasAuthority(Role.ROLE_USER.name())
+                .requestMatchers(HttpMethod.PATCH, "/team/{teamId}").hasAuthority(Role.ROLE_USER.name())
 				// 현장 투표
 				.requestMatchers(HttpMethod.POST, "/vote").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/current").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.POST, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.DELETE, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
-				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/extract").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/vote/{teamId}/extract").hasAuthority(Role.ROLE_ADMIN.name())
+                // 전문가 심사
+                .requestMatchers(HttpMethod.PATCH, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/judge").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/judge/changes").hasAuthority(Role.ROLE_ADMIN.name())
 			)
             .cors(Customizer.withDefaults())
 			.csrf(AbstractHttpConfigurer::disable)

@@ -46,8 +46,7 @@ public class JwtProvider {
 	}
 
 	public UsernamePasswordAuthenticationToken getAuthentication(String token) {
-		String resolvedToken = resolveToken(token);
-		Claims payload = getPayload(resolvedToken, JwtType.ACCESS_TOKEN);
+		Claims payload = getPayload(token, JwtType.ACCESS_TOKEN);
 
 		var userDetails = authDetailsService.loadUserByUsername(payload.getSubject());
 

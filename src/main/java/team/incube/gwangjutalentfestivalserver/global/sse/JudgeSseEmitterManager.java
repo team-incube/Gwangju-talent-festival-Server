@@ -13,20 +13,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JudgeSseEmitterManager {
     private static final long SSE_TIMEOUT_MILLIS = 60 * 60 * 1000L; // 60분
 
-    private final Map<UUID, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public SseEmitter addEmitter(UUID userId) {
+    public SseEmitter addEmitter(String phoneNumber) {
         SseEmitter emitter = new SseEmitter(SSE_TIMEOUT_MILLIS);
-        emitters.put(userId, emitter);
+        emitters.put(phoneNumber, emitter);
 
-        emitter.onCompletion(() -> emitters.remove(userId));
+        emitter.onCompletion(() -> emitters.remove(phoneNumber));
         emitter.onTimeout(() -> {
             emitter.complete();
-            emitters.remove(userId);
+            emitters.remove(phoneNumber);
         });
         emitter.onError(e -> {
             emitter.completeWithError(e);
-            emitters.remove(userId);
+            emitters.remove(phoneNumber);
         });
 
         return emitter;

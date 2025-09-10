@@ -18,7 +18,7 @@ public class CorsConfig implements WebMvcConfigurer {
             .allowedOrigins(corsProperties.getAllowedOrigins().toArray(new String[0]))
             .allowedHeaders("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-            .exposedHeaders("Authorization", "Refresh-Token")
+            .exposedHeaders("Authorization", "Refresh-Token", "Content-Type", "Last-Event-ID")
             .allowCredentials(true);
     }
 }
