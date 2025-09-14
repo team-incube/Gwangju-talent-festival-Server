@@ -45,7 +45,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/team").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
                 .requestMatchers(HttpMethod.GET, "/team/ranking").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/team").hasAuthority(Role.ROLE_USER.name())
-                .requestMatchers(HttpMethod.PATCH, "/team/{teamId}").hasAuthority(Role.ROLE_USER.name())
+                .requestMatchers(HttpMethod.PATCH, "/team/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
 				// 현장 투표
 				.requestMatchers(HttpMethod.POST, "/vote").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
