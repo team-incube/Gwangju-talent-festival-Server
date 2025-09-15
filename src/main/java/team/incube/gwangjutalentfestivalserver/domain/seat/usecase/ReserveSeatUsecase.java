@@ -55,9 +55,16 @@ public class ReserveSeatUsecase {
 
 		// 이미 예약한 좌석이 존재하는지
 		User currentUser = userUtil.getUser();
-		if(seatReservationRepository.existsByUser(currentUser)) {
-			throw new HttpException(HttpStatus.BAD_REQUEST, "이미 예약한 좌석이 존재합니다.");
-		}
+		long reserveCount = seatReservationRepository.countByUser(currentUser);
+
+        int limit = switch (currentUser.getRole()) {
+            case ROLE_PERFORMER -> 3;
+            default -> 1;
+        };
+
+        if (reserveCount >= limit) {
+            throw new HttpException(HttpStatus.BAD_REQUEST, "예약 한도를 초과헀습니다.");
+        }
 
 		SeatReservation seatReservation = SeatReservation.builder()
 			.seatNumber(seatNumber)
