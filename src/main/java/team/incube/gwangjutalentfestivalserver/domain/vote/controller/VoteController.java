@@ -54,7 +54,7 @@ public class VoteController {
         return connectSseVoteEventUsecase.execute(teamId);
     }
 
-    @GetMapping("/{teamId}/seats/extract")
+    @GetMapping("/{teamId}/extract")
     public ResponseEntity<RandomSeatExtractResponse> extractRandomSeats(
             @PathVariable Long teamId,
             @RequestParam(defaultValue = "100") int count
