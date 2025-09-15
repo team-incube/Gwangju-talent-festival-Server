@@ -16,7 +16,8 @@ import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
         @UniqueConstraint(columnNames = { "seat_section", "seat_number" })
     },
     indexes = {
-        @Index(name = "idx_seat_section_number", columnList = "seat_section, seat_number")
+        @Index(name = "idx_seat_section_number", columnList = "seat_section, seat_number"),
+        @Index(name = "idx_seat_reservation_user_id", columnList = "user_id")
     }
 )
 @Entity
@@ -37,7 +38,7 @@ public class SeatReservation {
 
     @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
