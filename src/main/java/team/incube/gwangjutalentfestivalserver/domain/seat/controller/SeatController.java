@@ -16,6 +16,8 @@ import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.*;
 import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.admin.BanSeatUsecase;
 import team.incube.gwangjutalentfestivalserver.domain.seat.usecase.admin.CancelSeatBanUsecase;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/seat")
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class SeatController {
 	private final FindAllSeatsUsecase findAllSeatsUsecase;
 	private final FindSeatsBySectionUsecase findSeatsBySectionUsecase;
 	private final FindSeatByCurrentUserUsecase findSeatByCurrentUserUsecase;
+    private final FindSeatsByCurrentPerformerUsecase findSeatsByCurrentPerformerUsecase;
 
 	@PostMapping
 	public ResponseEntity<Void> reserveSeat(
@@ -81,4 +84,10 @@ public class SeatController {
 	public SseEmitter connectSeatChangeEvent() {
 		return connectSseSeatEventUsecase.execute();
 	}
+
+    @GetMapping("/myself/performer")
+    public ResponseEntity<List<GetSeatResponse>> getMyselfPerformerSeats() {
+        List<GetSeatResponse> responses = findSeatsByCurrentPerformerUsecase.execute();
+        return ResponseEntity.ok(responses);
+    }
 }
