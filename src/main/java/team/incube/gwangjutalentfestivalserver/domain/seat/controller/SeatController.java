@@ -2,6 +2,7 @@ package team.incube.gwangjutalentfestivalserver.domain.seat.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -76,7 +77,7 @@ public class SeatController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/changes")
+    @GetMapping(value = "/changes", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter connectSeatChangeEvent() {
 		return connectSseSeatEventUsecase.execute();
 	}

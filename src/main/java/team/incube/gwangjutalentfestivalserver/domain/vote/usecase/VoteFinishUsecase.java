@@ -37,6 +37,7 @@ public class VoteFinishUsecase {
 
         team.finishVote();
         team.setStar(totalStar);
+        team.updatePerformStatus(TeamStatus.FINISHED);
         teamRepository.save(team);
 
         eventPublisher.publishEvent(new VoteFinishEvent(

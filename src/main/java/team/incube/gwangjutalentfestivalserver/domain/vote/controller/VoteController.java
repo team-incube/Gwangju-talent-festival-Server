@@ -47,7 +47,7 @@ public class VoteController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{teamId}/current")
+    @GetMapping(value ="/{teamId}/current", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter connectVoteChangeEvent(@PathVariable Long teamId) {
         return connectSseVoteEventUsecase.execute(teamId);
     }
