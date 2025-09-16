@@ -23,18 +23,17 @@ import java.util.List;
 public class VoteRandomExtractUsecase {
 
     private final RandomReservationExtractor extractor;
-    private final TeamRepository teamRepository;
+    private final InjectTeamUsecase injectTeamUsecase;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public byte[] execute(Long teamId, int count) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다."));
-
-        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count, team);
+        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count);
 
         if (reservations.isEmpty()) {
             throw new HttpException(HttpStatus.NOT_FOUND, "해당 팀에 예약된 사용자가 없습니다.");
         }
+
+        injectTeamUsecase.assignTeamToReservations(teamId, reservations);
 
         List<User> selected = reservations.stream()
                 .map(SeatReservation::getUser)

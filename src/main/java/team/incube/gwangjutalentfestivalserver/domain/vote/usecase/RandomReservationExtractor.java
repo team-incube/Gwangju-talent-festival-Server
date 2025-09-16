@@ -17,21 +17,17 @@ public class RandomReservationExtractor {
 
     private final SeatReservationRepository seatReservationRepository;
 
-    public List<SeatReservation> extractRandomReservations(Long teamId, int count, Team team) {
+    public List<SeatReservation> extractRandomReservations(Long teamId, int count) {
         List<SeatReservation> reservations = seatReservationRepository.findAllByTeamId(teamId);
 
         if (reservations.isEmpty()) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "해당 팀에는 좌석 예약자가 없습니다.");
         }
 
-        List<SeatReservation> limited = reservations.stream()
+        Collections.shuffle(reservations);
+        return reservations.stream()
                 .limit(count)
                 .toList();
-
-        limited.forEach(r -> r.setTeam(team));
-        seatReservationRepository.saveAll(limited);
-
-        return limited;
     }
 }
 

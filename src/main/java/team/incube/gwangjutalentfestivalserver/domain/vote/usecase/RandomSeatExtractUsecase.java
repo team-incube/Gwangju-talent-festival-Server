@@ -19,13 +19,16 @@ public class RandomSeatExtractUsecase {
 
     private final TeamRepository teamRepository;
     private final RandomReservationExtractor extractor;
+    private final InjectTeamUsecase injectTeamUsecase;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public RandomSeatExtractResponse execute(Long teamId, int count) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다."));
 
-        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count, team);
+        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count);
+
+        injectTeamUsecase.assignTeamToReservations(teamId, reservations);
 
         List<GetSeatResponse> seats = reservations.stream()
                 .map(r -> new GetSeatResponse(
