@@ -25,7 +25,7 @@ public class RandomSeatExtractUsecase {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다."));
 
-        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count);
+        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count, team);
 
         List<GetSeatResponse> seats = reservations.stream()
                 .map(r -> new GetSeatResponse(

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
+import team.incube.gwangjutalentfestivalserver.domain.team.entity.Team;
+import team.incube.gwangjutalentfestivalserver.domain.team.repository.TeamRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 
@@ -21,10 +23,14 @@ import java.util.List;
 public class VoteRandomExtractUsecase {
 
     private final RandomReservationExtractor extractor;
+    private final TeamRepository teamRepository;
 
     @Transactional(readOnly = true)
     public byte[] execute(Long teamId, int count) {
-        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count);
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다."));
+
+        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count, team);
 
         if (reservations.isEmpty()) {
             throw new HttpException(HttpStatus.NOT_FOUND, "해당 팀에 예약된 사용자가 없습니다.");
