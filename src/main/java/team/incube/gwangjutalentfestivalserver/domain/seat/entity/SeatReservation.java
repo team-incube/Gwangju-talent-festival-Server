@@ -43,4 +43,8 @@ public class SeatReservation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
