@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.BanSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.CancelSeatBanRequest;
+import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.PerformerCancelSeatReservationRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.request.ReserveSeatRequest;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetAllSeatsResponse;
 import team.incube.gwangjutalentfestivalserver.domain.seat.dto.response.GetSeatResponse;
@@ -31,6 +32,7 @@ public class SeatController {
 	private final FindSeatsBySectionUsecase findSeatsBySectionUsecase;
 	private final FindSeatByCurrentUserUsecase findSeatByCurrentUserUsecase;
     private final FindSeatsByCurrentPerformerUsecase findSeatsByCurrentPerformerUsecase;
+    private final PerformerCancelSeatReservationUsecase performerCancelSeatReservationUsecase;
 
 	@PostMapping
 	public ResponseEntity<Void> reserveSeat(
@@ -89,5 +91,11 @@ public class SeatController {
     public ResponseEntity<List<GetSeatResponse>> getMyselfPerformerSeats() {
         List<GetSeatResponse> responses = findSeatsByCurrentPerformerUsecase.execute();
         return ResponseEntity.ok(responses);
+    }
+
+    @DeleteMapping("/performer")
+    public ResponseEntity<Void> cancelMyselfPerformerSeats(@RequestBody PerformerCancelSeatReservationRequest request) {
+        performerCancelSeatReservationUsecase.execute(request);
+        return ResponseEntity.ok().build();
     }
 }
