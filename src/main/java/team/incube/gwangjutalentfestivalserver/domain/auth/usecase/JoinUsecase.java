@@ -10,6 +10,7 @@ import team.incube.gwangjutalentfestivalserver.domain.auth.entity.VerifyCode;
 import team.incube.gwangjutalentfestivalserver.domain.auth.repository.VerifyCodeRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 import team.incube.gwangjutalentfestivalserver.domain.user.enums.Role;
+import team.incube.gwangjutalentfestivalserver.domain.user.repository.PerformerUserRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.repository.UserRepository;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 
@@ -19,6 +20,7 @@ public class JoinUsecase {
 	private final UserRepository userRepository;
 	private final VerifyCodeRepository verifyCodeRepository;
 	private final PasswordEncoder passwordEncoder;
+    private final PerformerUserRepository performerUserRepository;
 
 	@Transactional
 	public void execute(JoinRequest request) {
@@ -41,10 +43,12 @@ public class JoinUsecase {
 
 		verifyCodeRepository.delete(verifyCode);
 
+        Role role = performerUserRepository.existsByPhoneNumber(phoneNumber) ? Role.ROLE_PERFORMER : Role.ROLE_USER;
+
 		User user = User.builder()
 				.phoneNumber(request.getPhoneNumber())
 				.encodedPassword(encodedPassword)
-				.role(Role.ROLE_USER)
+				.role(role)
 				.build();
 
 		userRepository.save(user);
