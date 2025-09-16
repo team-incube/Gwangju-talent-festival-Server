@@ -24,4 +24,8 @@ public interface SeatReservationRepository extends JpaRepository<SeatReservation
     List<SeatReservation> findAllByTeamId(Long teamId);
 
     long countByUser(User user);
+
+    List<SeatReservation> findAllByUser(User user);
+
+    Optional<SeatReservation> findBySeatSectionAndSeatNumberAndUser(Character seatSection, Integer seatNumber, User user);
 }

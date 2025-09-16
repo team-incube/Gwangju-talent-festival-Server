@@ -31,14 +31,16 @@ public class SecurityConfig {
 				// 인증
 				.requestMatchers("/auth/**").permitAll()
 				// 예매
-				.requestMatchers(HttpMethod.POST, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
-				.requestMatchers(HttpMethod.DELETE, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.POST, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name(), Role.ROLE_PERFORMER.name())
+				.requestMatchers(HttpMethod.DELETE, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name(), Role.ROLE_PERFORMER.name())
 				.requestMatchers(HttpMethod.POST, "/seat/ban").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.DELETE, "/seat/ban").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.GET, "/seat/myself").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
-				.requestMatchers(HttpMethod.GET, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
-				.requestMatchers(HttpMethod.GET, "/seat/all").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
-				.requestMatchers(HttpMethod.GET, "/seat/changes").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/seat").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name(), Role.ROLE_PERFORMER.name())
+				.requestMatchers(HttpMethod.GET, "/seat/all").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name(), Role.ROLE_PERFORMER.name())
+				.requestMatchers(HttpMethod.GET, "/seat/changes").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name(), Role.ROLE_PERFORMER.name())
+                .requestMatchers(HttpMethod.GET, "/seat/myself/performer").hasAnyAuthority(Role.ROLE_PERFORMER.name())
+                .requestMatchers(HttpMethod.DELETE, "/seat/performer").hasAnyAuthority(Role.ROLE_PERFORMER.name())
 				// 상태 확인
 				.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 				// 공연 팀
