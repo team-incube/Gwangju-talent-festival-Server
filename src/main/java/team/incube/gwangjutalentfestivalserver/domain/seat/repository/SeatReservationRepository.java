@@ -8,6 +8,7 @@ import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface SeatReservationRepository extends JpaRepository<SeatReservation, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -17,9 +18,8 @@ public interface SeatReservationRepository extends JpaRepository<SeatReservation
 
     Optional<SeatReservation> findByUser(User user);
 
-    void deleteByUser(User user);
-
     List<SeatReservation> findBySeatSection(Character seatSection);
 
-    List<SeatReservation> findAllByTeamId(Long teamId);
+    List<SeatReservation> findAllByUserIdIn(List<UUID> userIds);
+
 }
