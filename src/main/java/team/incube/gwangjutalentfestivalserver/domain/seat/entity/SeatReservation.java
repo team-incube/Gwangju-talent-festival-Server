@@ -39,12 +39,4 @@ public class SeatReservation {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
 }
