@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import team.incube.gwangjutalentfestivalserver.domain.vote.dto.request.VoteParticipateRequest;
 import team.incube.gwangjutalentfestivalserver.domain.vote.dto.response.RandomSeatExtractResponse;
+import team.incube.gwangjutalentfestivalserver.domain.vote.dto.response.RandomSeatVoteResult;
 import team.incube.gwangjutalentfestivalserver.domain.vote.dto.response.VoteResultResponse;
 import team.incube.gwangjutalentfestivalserver.domain.vote.usecase.*;
 
@@ -22,8 +23,7 @@ public class VoteController {
     private final VoteStartUsecase voteStartUsecase;
     private final VoteFinishUsecase voteFinishUsecase;
     private final ConnectSseVoteEventUsecase connectSseVoteEventUsecase;
-    private final RandomSeatExtractUsecase randomSeatExtractUsecase;
-    private final VoteRandomExtractUsecase voteRandomExtractUsecase;
+    private final RandomSeatVoteUsecase randomSeatVoteUsecase;
 
     @PostMapping
     public ResponseEntity<Void> participate(@RequestBody @Valid VoteParticipateRequest request) {
@@ -54,25 +54,12 @@ public class VoteController {
         return connectSseVoteEventUsecase.execute(teamId);
     }
 
-    @GetMapping("/{teamId}/extract")
-    public ResponseEntity<RandomSeatExtractResponse> extractRandomSeats(
+    @GetMapping("/{teamId}/random")
+    public ResponseEntity<RandomSeatVoteResult> extractRandomVoters(
             @PathVariable Long teamId,
             @RequestParam(defaultValue = "100") int count
     ) {
-        RandomSeatExtractResponse response = randomSeatExtractUsecase.execute(teamId, count);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{teamId}/extract/excel")
-    public ResponseEntity<byte[]> extractRandomVoters(
-            @PathVariable Long teamId,
-            @RequestParam(defaultValue = "100") int count
-    ) {
-        byte[] excelFile = voteRandomExtractUsecase.execute(teamId, count);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=voters_" + teamId + ".xlsx")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(excelFile);
+        RandomSeatVoteResult result = randomSeatVoteUsecase.execute(teamId, count);
+        return ResponseEntity.ok(result);
     }
 }
