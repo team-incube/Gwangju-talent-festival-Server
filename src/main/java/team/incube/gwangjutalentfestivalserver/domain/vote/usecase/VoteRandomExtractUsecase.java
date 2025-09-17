@@ -9,38 +9,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
-import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatReservationRepository;
+import team.incube.gwangjutalentfestivalserver.domain.team.entity.Team;
+import team.incube.gwangjutalentfestivalserver.domain.team.repository.TeamRepository;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class VoteRandomExtractUsecase {
 
-    private final SeatReservationRepository seatReservationRepository;
+    private final RandomReservationExtractor extractor;
+    private final InjectTeamUsecase injectTeamUsecase;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public byte[] execute(Long teamId, int count) {
-        List<User> reservedUsers = seatReservationRepository.findAllByTeamId(teamId)
-                .stream()
-                .map(SeatReservation::getUser)
-                .collect(Collectors.toList());
+        List<SeatReservation> reservations = extractor.extractRandomReservations(teamId, count);
 
-        if (reservedUsers.isEmpty()) {
-            throw new HttpException(HttpStatus.NOT_FOUND, "해당 팀을 찾을 수 없습니다.");
+        if (reservations.isEmpty()) {
+            throw new HttpException(HttpStatus.NOT_FOUND, "해당 팀에 예약된 사용자가 없습니다.");
         }
 
-        Collections.shuffle(reservedUsers);
+        injectTeamUsecase.assignTeamToReservations(teamId, reservations);
 
-        List<User> selected = reservedUsers.stream()
-                .limit(count)
-                .collect(Collectors.toList());
+        List<User> selected = reservations.stream()
+                .map(SeatReservation::getUser)
+                .toList();
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Random Voters");
