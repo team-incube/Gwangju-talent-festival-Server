@@ -43,9 +43,9 @@ public class FindAllJudgementByCurrentUserUsecase {
         for (Team team : teams) {
             Judgement jm = judgementMap.get(team.getId());
 
-            int completionExpression   = Optional.ofNullable(jm).map(Judgement::getCompletionExpression).orElse(0);
-            int creativityComposition  = Optional.ofNullable(jm).map(Judgement::getCreativityComposition).orElse(0);
-            int stageMannerPerformance = Optional.ofNullable(jm).map(Judgement::getStageMannerPerformance).orElse(0);
+            int completionExpression   = Optional.ofNullable(jm).map(Judgement::getCompletionExpression).orElse(40);
+            int creativityComposition  = Optional.ofNullable(jm).map(Judgement::getCreativityComposition).orElse(30);
+            int stageMannerPerformance = Optional.ofNullable(jm).map(Judgement::getStageMannerPerformance).orElse(30);
 
             boolean judged             = jm != null;
             boolean performed          = team.getPerformStatus() != TeamStatus.PENDING;
