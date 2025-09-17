@@ -12,9 +12,6 @@ import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 
 @Table(
     name = "seat_reservation",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "seat_section", "seat_number" })
-    },
     indexes = {
         @Index(name = "idx_seat_section_number", columnList = "seat_section, seat_number"),
         @Index(name = "idx_seat_reservation_user_id", columnList = "user_id")
