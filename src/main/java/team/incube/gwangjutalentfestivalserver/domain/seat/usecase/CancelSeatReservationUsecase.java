@@ -32,7 +32,7 @@ public class CancelSeatReservationUsecase {
 		applicationEventPublisher.publishEvent(new SeatChangeEvent(
 				seatReservation.getSeatSection().toString(),
 				seatReservation.getSeatNumber(),
-				false
+				true
 		));
 	}
 }
