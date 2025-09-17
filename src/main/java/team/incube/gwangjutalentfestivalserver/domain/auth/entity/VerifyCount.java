@@ -5,26 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UuidGenerator;
-import team.incube.gwangjutalentfestivalserver.domain.user.enums.Role;
-
-import java.util.List;
-import java.util.UUID;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@RedisHash("verify-count")
 public class VerifyCount {
 	@Id
-	@Column(nullable = false)
 	private String phoneNumber;
 
-	@Column(nullable = false)
 	private Integer count;
 
 	public void incrementCount(){
+		if(count == null) count = 0;
 		count++;
 	}
 }

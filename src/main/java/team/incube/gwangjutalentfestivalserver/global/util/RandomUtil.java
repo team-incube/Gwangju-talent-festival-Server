@@ -7,7 +7,7 @@ import java.util.Random;
 @Component
 public class RandomUtil {
     public String generateRandomCode(int length){
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        String characters = "0123456789";
         Random random = new Random();
         StringBuilder code = new StringBuilder();
 

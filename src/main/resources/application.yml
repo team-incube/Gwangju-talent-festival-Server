@@ -31,11 +31,8 @@ spring:
 jwt:
   access-token-key: ${ACCESS_TOKEN_KEY}
   refresh-token-key: ${REFRESH_TOKEN_KEY}
-#  access-token-expires: 900000        # 15?
-#  refresh-token-expires: 1209600000   # 14?
-  access-token-expires: 1209600000
+  access-token-expires: 900000
   refresh-token-expires: 1209600000
-
 
 thirdparty:
   ncp:
@@ -56,6 +53,7 @@ cors:
     - "https://xn--hc0b809dz3b.kr"
     - "https://www.xn--hc0b809dz3b.kr"
     - "https://gwangju-talent-festival-clienttest.vercel.app"
+    - "https://festival-test-pink.vercel.app"
 
 management:
   endpoints:
