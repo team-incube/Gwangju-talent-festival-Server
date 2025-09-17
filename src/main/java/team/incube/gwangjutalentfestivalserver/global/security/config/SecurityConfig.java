@@ -52,8 +52,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/current").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.POST, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
 				.requestMatchers(HttpMethod.DELETE, "/vote/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
-                .requestMatchers(HttpMethod.GET, "/vote/{teamId}/extract").hasAuthority(Role.ROLE_ADMIN.name())
-				.requestMatchers(HttpMethod.GET, "/vote/{teamId}/extract/excel").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/vote/{teamId}/random").hasAuthority(Role.ROLE_ADMIN.name())
                 // 전문가 심사
                 .requestMatchers(HttpMethod.PATCH, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/judge").hasAuthority(Role.ROLE_ADMIN.name())
