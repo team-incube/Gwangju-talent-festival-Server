@@ -49,7 +49,7 @@ public class ReserveSeatUsecase {
 		boolean isUnavailableSeat =
 			seatBanRepository.existsById(request.toSeatBanId());
 
-		if(isUnavailableSeat) {
+		if(!isUnavailableSeat) {
 			throw new HttpException(HttpStatus.BAD_REQUEST, "관리자가 금지한 좌석입니다.");
 		}
 
