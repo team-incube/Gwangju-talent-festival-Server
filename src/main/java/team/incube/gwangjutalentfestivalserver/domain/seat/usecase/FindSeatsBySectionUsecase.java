@@ -44,7 +44,7 @@ public class FindSeatsBySectionUsecase {
 
         List<Boolean> seats = new ArrayList<>();
         for (int i = 1; i <= seatLastNumber; i++) {
-            boolean available = !(bannedSeatNumbers.contains(i) || reservedSeatNumbers.contains(i));
+            boolean available = !(!bannedSeatNumbers.contains(i) || reservedSeatNumbers.contains(i));
             seats.add(available);
         }
 

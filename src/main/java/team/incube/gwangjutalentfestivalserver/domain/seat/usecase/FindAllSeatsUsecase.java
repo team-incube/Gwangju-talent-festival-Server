@@ -84,7 +84,7 @@ public class FindAllSeatsUsecase {
 
         List<Boolean> seats = new ArrayList<>();
         for (int i = 1; i <= maxSeatNumber; i++) {
-            boolean available = !(banned.contains(i) || reserved.contains(i));
+            boolean available = !(!banned.contains(i) || reserved.contains(i));
             seats.add(available);
         }
 
