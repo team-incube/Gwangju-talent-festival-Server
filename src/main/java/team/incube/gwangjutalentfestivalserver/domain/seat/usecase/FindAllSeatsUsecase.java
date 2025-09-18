@@ -9,14 +9,19 @@ import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatBan;
 import team.incube.gwangjutalentfestivalserver.domain.seat.entity.SeatReservation;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatBanRepository;
 import team.incube.gwangjutalentfestivalserver.domain.seat.repository.SeatReservationRepository;
+import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
+import team.incube.gwangjutalentfestivalserver.domain.user.enums.Role;
 import team.incube.gwangjutalentfestivalserver.global.util.SeatUtil;
+import team.incube.gwangjutalentfestivalserver.global.util.UserUtil;
 
+import java.lang.reflect.Member;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FindAllSeatsUsecase {
+    private final UserUtil userUtil;
     private final SeatBanRepository seatBanRepository;
     private final SeatReservationRepository seatReservationRepository;
     private final SeatUtil seatUtil;
@@ -25,7 +30,8 @@ public class FindAllSeatsUsecase {
 
     @Transactional(readOnly = true)
     public GetAllSeatsResponse execute() {
-        List<SeatBan> seatBans = seatBanRepository.findAll();
+        Role role = userUtil.getUser().getRole();
+        List<SeatBan> seatBans = seatBanRepository.findAllByRole(role);
         List<SeatReservation> seatReservations = seatReservationRepository.findAll();
 
         Map<Character, Set<SeatBan>> seatBansMap = seatBans.stream()
