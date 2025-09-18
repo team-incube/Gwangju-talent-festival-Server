@@ -27,7 +27,7 @@ public class BanSeatUsecase {
 			throw new HttpException(HttpStatus.BAD_REQUEST, "이미 관리자가 금지한 자리입니다.");
 		}
 
-		SeatBan newBan = new SeatBan(seatBanId);
+		SeatBan newBan = new SeatBan(seatBanId, request.getRole());
 		seatBanRepository.save(newBan);
 
 		applicationEventPublisher.publishEvent(new SeatChangeEvent(
