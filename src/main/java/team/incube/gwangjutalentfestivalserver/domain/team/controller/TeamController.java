@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import team.incube.gwangjutalentfestivalserver.domain.team.dto.request.CreateTeamRequest;
 import team.incube.gwangjutalentfestivalserver.domain.team.dto.response.GetAllTeamsResponse;
 import team.incube.gwangjutalentfestivalserver.domain.team.dto.response.GetTeamRankingResponse;
-import team.incube.gwangjutalentfestivalserver.domain.team.usecase.ChangePerformanceTeamUsecase;
-import team.incube.gwangjutalentfestivalserver.domain.team.usecase.CreateTeamUsecase;
-import team.incube.gwangjutalentfestivalserver.domain.team.usecase.FindAllTeamsUsecase;
-import team.incube.gwangjutalentfestivalserver.domain.team.usecase.FindTeamRankingUsecase;
+import team.incube.gwangjutalentfestivalserver.domain.team.dto.response.GetTeamResponse;
+import team.incube.gwangjutalentfestivalserver.domain.team.usecase.*;
 
 import java.util.List;
 
@@ -22,6 +20,7 @@ public class TeamController {
     private final ChangePerformanceTeamUsecase changePerformanceTeamUsecase;
     private final CreateTeamUsecase createTeamUsecase;
     private final FindTeamRankingUsecase findTeamRankingUsecase;
+    private final FindTeamByIdUsecase findTeamByIdUsecase;
 
     @GetMapping
     public ResponseEntity<List<GetAllTeamsResponse>> getAllTeams() {
@@ -45,5 +44,11 @@ public class TeamController {
     public ResponseEntity<List<GetTeamRankingResponse>> getTeamRanking() {
         List<GetTeamRankingResponse> responses = findTeamRankingUsecase.execute();
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/{team_id}")
+    public ResponseEntity<GetTeamResponse> getTeamById(@PathVariable("team_id") Long teamId) {
+        GetTeamResponse response = findTeamByIdUsecase.execute(teamId);
+        return ResponseEntity.ok(response);
     }
 }

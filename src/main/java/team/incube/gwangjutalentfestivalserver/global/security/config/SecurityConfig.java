@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/team/ranking").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/team").hasAuthority(Role.ROLE_USER.name())
                 .requestMatchers(HttpMethod.PATCH, "/team/{teamId}").hasAuthority(Role.ROLE_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/team/{teamId}").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				// 현장 투표
 				.requestMatchers(HttpMethod.POST, "/vote").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
 				.requestMatchers(HttpMethod.GET, "/vote/{teamId}").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_USER.name())
@@ -60,6 +61,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/judge").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/judge/{team_id}").hasAuthority(Role.ROLE_ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/judge/changes").hasAuthority(Role.ROLE_ADMIN.name())
+                // 엑셀
+                .requestMatchers(HttpMethod.GET, "/excel/**").permitAll()
 			)
             .cors(Customizer.withDefaults())
 			.csrf(AbstractHttpConfigurer::disable)
