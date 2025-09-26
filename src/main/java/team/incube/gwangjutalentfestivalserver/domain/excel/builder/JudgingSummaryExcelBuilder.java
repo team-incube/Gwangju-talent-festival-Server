@@ -29,7 +29,6 @@ public class JudgingSummaryExcelBuilder {
             Sheet sh = wb.createSheet("심사집계표");
             sh.setDisplayGridlines(false);
 
-            // ===== Fonts =====
             XSSFFont titleFont = wb.createFont();
             titleFont.setBold(true);
             titleFont.setFontHeightInPoints((short) 12);
@@ -41,7 +40,6 @@ public class JudgingSummaryExcelBuilder {
             infoFont.setFontHeightInPoints((short) 11);
             infoFont.setBold(true);
 
-            // ===== Styles =====
             XSSFCellStyle titleStyle = wb.createCellStyle();
             titleStyle.setAlignment(HorizontalAlignment.CENTER);
             titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -71,9 +69,8 @@ public class JudgingSummaryExcelBuilder {
 
             int r = 0;
 
-            // ===== Title =====
             Row titleRow = sh.createRow(r++);
-            titleRow.setHeightInPoints(36); // 🔥 박스 크게
+            titleRow.setHeightInPoints(36);
             for (int i = 0; i <= 8; i++) titleRow.createCell(i);
             titleRow.getCell(0).setCellValue(
                     (title != null && !title.isBlank())
@@ -85,9 +82,8 @@ public class JudgingSummaryExcelBuilder {
             sh.addMergedRegion(titleRange);
             boxThin(sh, titleRange);
 
-            // ===== 확인자/작성자 =====
             Row infoRow = sh.createRow(r++);
-            infoRow.setHeightInPoints(40); // 🔥 크게
+            infoRow.setHeightInPoints(40);
             for (int i = 0; i <= 8; i++) infoRow.createCell(i);
             infoRow.getCell(0).setCellValue(
                     "확인자: 체육예술인성교육과 사무관 양정숙   (서명)\n" +
@@ -98,9 +94,8 @@ public class JudgingSummaryExcelBuilder {
             sh.addMergedRegion(infoRange);
             boxThin(sh, infoRange);
 
-            // ===== Header =====
             Row h = sh.createRow(r++);
-            h.setHeightInPoints(40); // 🔥 헤더 박스 키움
+            h.setHeightInPoints(40);
             String[] headers = {
                     "심사번호",
                     "심사위원\n(A)", "심사위원\n(B)", "심사위원\n(C)",
@@ -113,11 +108,10 @@ public class JudgingSummaryExcelBuilder {
                 c.setCellStyle(headerStyle);
             }
 
-            // ===== Body =====
             if (rows.isEmpty()) {
                 for (int i = 1; i <= 10; i++) {
                     Row row = sh.createRow(r++);
-                    row.setHeightInPoints(34); // 🔥 데이터 행 박스 크게
+                    row.setHeightInPoints(34);
                     for (int col = 0; col < headers.length; col++) {
                         Cell c = row.createCell(col);
                         c.setCellStyle(bodyCenter);
@@ -127,7 +121,7 @@ public class JudgingSummaryExcelBuilder {
             } else {
                 for (SummaryRow sr : rows) {
                     Row row = sh.createRow(r++);
-                    row.setHeightInPoints(34); // 🔥 데이터 행 박스 크게
+                    row.setHeightInPoints(34);
                     Cell c0 = row.createCell(0);
                     c0.setCellValue(sr.no());
                     c0.setCellStyle(bodyCenter);
@@ -149,7 +143,6 @@ public class JudgingSummaryExcelBuilder {
                 }
             }
 
-            // ===== Column widths =====
             int[] widths = {10, 14, 14, 14, 14, 14, 14, 14, 10};
             for (int i = 0; i < widths.length; i++) sh.setColumnWidth(i, widths[i] * 256);
 
