@@ -10,6 +10,7 @@ import team.incube.gwangjutalentfestivalserver.domain.team.enums.TeamStatus;
 import team.incube.gwangjutalentfestivalserver.domain.user.entity.User;
 import team.incube.gwangjutalentfestivalserver.domain.vote.dto.request.VoteParticipateRequest;
 import team.incube.gwangjutalentfestivalserver.domain.vote.entity.Vote;
+import team.incube.gwangjutalentfestivalserver.domain.vote.entity.embeddable.VoteId;
 import team.incube.gwangjutalentfestivalserver.domain.vote.event.VoteChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.vote.repository.VoteRepository;
 import team.incube.gwangjutalentfestivalserver.domain.team.repository.TeamRepository;
@@ -27,7 +28,6 @@ public class VoteParticipateUsecase {
     private final ApplicationEventPublisher eventPublisher;
 
     public void execute(VoteParticipateRequest request) {
-
         User user = userUtil.getUser();
 
         if (!seatReservationRepository.existsByUser(user)) {
@@ -41,10 +41,16 @@ public class VoteParticipateUsecase {
             throw new HttpException(HttpStatus.BAD_REQUEST, "투표가 진행중이 아닙니다.");
         }
 
+        Long maxId = voteRepository.findMaxIdByTeamId(team.getId()).orElse(0L);
+        Long newId = maxId + 1;
+        VoteId voteId = new VoteId(newId, team.getId());
+
         Vote vote = Vote.builder()
+                .id(voteId)
                 .team(team)
                 .star(request.getStar())
                 .build();
+
         voteRepository.save(vote);
 
         eventPublisher.publishEvent(new VoteChangeEvent(
