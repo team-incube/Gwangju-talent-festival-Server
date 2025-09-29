@@ -57,4 +57,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
         limit 2
         """, nativeQuery = true)
     List<String> findTop2TeamsByStar(@Param("eventYear") int eventYear);
+
+    List<Team> findAllByOrderByIdAsc();
 }
