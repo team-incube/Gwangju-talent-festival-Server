@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team.incube.gwangjutalentfestivalserver.domain.team.entity.Team;
+import team.incube.gwangjutalentfestivalserver.domain.vote.entity.embeddable.VoteId;
 
 @Getter
 @Entity
@@ -14,15 +15,14 @@ import team.incube.gwangjutalentfestivalserver.domain.team.entity.Team;
 @AllArgsConstructor
 @Builder
 public class Vote {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", nullable = false)
-    private Team team;
+    @EmbeddedId
+    private VoteId id;
 
     @Column(nullable = false)
     private int star;
+
+    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 }
