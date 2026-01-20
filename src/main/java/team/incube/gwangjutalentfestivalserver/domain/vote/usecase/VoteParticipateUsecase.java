@@ -15,6 +15,7 @@ import team.incube.gwangjutalentfestivalserver.domain.vote.dto.request.VoteParti
 import team.incube.gwangjutalentfestivalserver.domain.vote.entity.Vote;
 import team.incube.gwangjutalentfestivalserver.domain.vote.event.VoteChangeEvent;
 import team.incube.gwangjutalentfestivalserver.domain.vote.repository.VoteRepository;
+import team.incube.gwangjutalentfestivalserver.domain.vote.repository.VoteUserRepository;
 import team.incube.gwangjutalentfestivalserver.global.exception.HttpException;
 import team.incube.gwangjutalentfestivalserver.global.util.UserUtil;
 
@@ -26,6 +27,7 @@ public class VoteParticipateUsecase {
     private final TeamRepository teamRepository;
     private final UserUtil userUtil;
     private final SeatReservationRepository seatReservationRepository;
+    private final VoteUserRepository voteUserRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -41,6 +43,10 @@ public class VoteParticipateUsecase {
 
         if (team.getTeamStatus() != TeamStatus.ONGOING) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "투표가 진행중이 아닙니다.");
+        }
+
+        if (!voteUserRepository.existsByTeamIdAndUserId(team.getId(), user.getId())) {
+            throw new HttpException(HttpStatus.FORBIDDEN, "투표 자격이 없습니다.");
         }
 
         if (voteRepository.existsByTeamIdAndUserId(team.getId(), user.getId())) {
