@@ -35,17 +35,14 @@ public class VoteInviteUsecase {
 
         List<VoteUser> candidates = voteUserRepository.findAllByTeamId(teamId);
 
-        List<VoteUser> filtered = candidates.stream()
-                .filter(vu -> vu.getUser() != null)
-                .filter(vu -> vu.getUser().getPhoneNumber() != null)
-                .collect(Collectors.toCollection(ArrayList::new));
+        List<VoteUser> shuffled = new ArrayList<>(candidates);
 
-        if (filtered.isEmpty()) {
+        if (shuffled.isEmpty()) {
             return new VoteInviteResponse(team.getId(), team.getTeamName(), 0, List.of(), List.of());
         }
 
-        Collections.shuffle(filtered);
-        List<VoteUser> picked = filtered.stream().limit(limit).toList();
+        Collections.shuffle(shuffled);
+        List<VoteUser> picked = shuffled.stream().limit(limit).toList();
 
         List<UUID> userIds = picked.stream()
                 .map(vu -> vu.getUser().getId())
@@ -69,7 +66,6 @@ public class VoteInviteUsecase {
 
         List<String> phoneNumbers = picked.stream()
                 .map(vu -> vu.getUser().getPhoneNumber())
-                .distinct()
                 .toList();
 
         return new VoteInviteResponse(team.getId(), team.getTeamName(), picked.size(), seats, phoneNumbers);
