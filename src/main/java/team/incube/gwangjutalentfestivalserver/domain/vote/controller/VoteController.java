@@ -2,12 +2,12 @@ package team.incube.gwangjutalentfestivalserver.domain.vote.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import team.incube.gwangjutalentfestivalserver.domain.vote.dto.request.VoteParticipateRequest;
+import team.incube.gwangjutalentfestivalserver.domain.vote.dto.response.VoteInviteResponse;
 import team.incube.gwangjutalentfestivalserver.domain.vote.dto.response.VoteResultResponse;
 import team.incube.gwangjutalentfestivalserver.domain.vote.usecase.*;
 
@@ -21,7 +21,7 @@ public class VoteController {
     private final VoteStartUsecase voteStartUsecase;
     private final VoteFinishUsecase voteFinishUsecase;
     private final ConnectSseVoteEventUsecase connectSseVoteEventUsecase;
-    private final VoteRandomExtractUsecase voteRandomExtractUsecase;
+    private final VoteInviteUsecase voteInviteUsecase;
 
     @PostMapping
     public ResponseEntity<Void> participate(@RequestBody @Valid VoteParticipateRequest request) {
@@ -52,16 +52,11 @@ public class VoteController {
         return connectSseVoteEventUsecase.execute(teamId);
     }
 
-    @GetMapping("/{teamId}/extract")
-    public ResponseEntity<byte[]> extractRandomVoters(
+    @PostMapping("/{teamId}/invite")
+    public ResponseEntity<VoteInviteResponse> invite(
             @PathVariable Long teamId,
-            @RequestParam(defaultValue = "100") int count
+            @RequestParam(defaultValue = "100") int limit
     ) {
-        byte[] excelFile = voteRandomExtractUsecase.execute(teamId, count);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=voters_" + teamId + ".xlsx")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(excelFile);
+        return ResponseEntity.ok(voteInviteUsecase.execute(teamId, limit));
     }
 }
