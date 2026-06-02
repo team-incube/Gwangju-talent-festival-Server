@@ -1,0 +1,74 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew *)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit*)",
+      "Bash(git checkout *)",
+      "Bash(git branch*)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git stash*)",
+      "Bash(git tag*)",
+      "Bash(git show*)",
+      "Bash(git blame*)",
+      "Bash(docker-compose *)",
+      "Bash(docker compose *)",
+      "Bash(mkdir -p *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(echo *)",
+      "Bash(pwd)",
+      "Bash(which *)",
+      "Bash(java *)",
+      "Bash(gh *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)",
+      "Bash(git checkout -- .)",
+      "Bash(git clean -f*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

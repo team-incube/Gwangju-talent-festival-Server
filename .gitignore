@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Claude Code ###
+.claude/settings.local.json
+.claude/flywheel/session.log
+.claude/flywheel/sessions.md
