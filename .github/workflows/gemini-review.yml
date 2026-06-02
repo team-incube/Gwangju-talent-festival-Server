@@ -1,0 +1,140 @@
+name: Gemini Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - develop
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD \
+            -- '*.java' '*.yml' '*.gradle' '*.properties' \
+            | head -c 28000 > pr_diff.txt
+          SIZE=$(wc -c < pr_diff.txt)
+          echo "size=$SIZE" >> $GITHUB_OUTPUT
+          echo "PR diff size: $SIZE bytes"
+
+      - name: Run Gemini Review
+        if: steps.diff.outputs.size > 0
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python3 << 'EOF'
+          import os, json, urllib.request, urllib.error, sys
+
+          diff = open("pr_diff.txt").read()
+          if not diff.strip():
+              print("diff가 비어있습니다. 리뷰를 건너뜁니다.")
+              sys.exit(0)
+
+          prompt = f"""당신은 Spring Boot / Java 전문 코드 리뷰어입니다.
+          아래 PR 변경사항을 리뷰해주세요.
+
+          **PR 제목:** {os.environ['PR_TITLE']}
+
+          **리뷰 기준:**
+          - Clean Architecture / DDD 원칙 준수 여부
+          - 보안 취약점 (SQL Injection, XSS, 인증 누락 등)
+          - 성능 문제 (N+1 쿼리, 불필요한 DB 호출 등)
+          - Spring Boot / JPA / Redis 올바른 사용
+          - @Transactional 적용 위치
+          - 예외 처리 적절성
+          - 코드 가독성 및 유지보수성
+
+          **출력 형식:**
+          ## 🤖 Gemini Code Review
+
+          ### 종합 평가
+          [✅ LGTM / ⚠️ 개선 권장 / ❌ 수정 필요]
+
+          ### 발견된 이슈
+          (없으면 "특이사항 없음"으로 표기)
+          - 🔴 **[심각]** `파일명:라인` 설명
+          - 🟡 **[권장]** `파일명:라인` 설명
+          - 🟢 **[제안]** `파일명:라인` 설명
+
+          ### 잘된 점
+          -
+
+          ---
+          *Powered by Gemini*
+
+          **변경된 코드:**
+          ```diff
+          {diff[:25000]}
+          ```
+          """
+
+          body = {
+              "contents": [{"parts": [{"text": prompt}]}],
+              "generationConfig": {
+                  "temperature": 0.2,
+                  "maxOutputTokens": 2048
+              }
+          }
+
+          api_key = os.environ["GEMINI_API_KEY"]
+          url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+
+          req = urllib.request.Request(
+              url,
+              data=json.dumps(body).encode(),
+              headers={"Content-Type": "application/json"},
+              method="POST"
+          )
+
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  result = json.loads(resp.read())
+              review = result["candidates"][0]["content"]["parts"][0]["text"]
+          except urllib.error.HTTPError as e:
+              print(f"Gemini API 오류: {e.code} {e.read().decode()}")
+              sys.exit(1)
+
+          # PR에 코멘트 추가
+          pr_number = os.environ["PR_NUMBER"]
+          repo = os.environ["REPO"]
+          gh_token = os.environ["GH_TOKEN"]
+
+          comment_url = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments"
+          comment_body = json.dumps({"body": review}).encode()
+
+          comment_req = urllib.request.Request(
+              comment_url,
+              data=comment_body,
+              headers={
+                  "Authorization": f"Bearer {gh_token}",
+                  "Content-Type": "application/json",
+                  "Accept": "application/vnd.github+json"
+              },
+              method="POST"
+          )
+
+          with urllib.request.urlopen(comment_req) as resp:
+              print(f"리뷰 코멘트 등록 완료: {json.loads(resp.read())['html_url']}")
+
+          EOF
+
+      - name: Skip notice
+        if: steps.diff.outputs.size == 0
+        run: echo "Java/YAML/Gradle 변경사항이 없어 리뷰를 건너뜁니다."
