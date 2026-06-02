@@ -32,6 +32,7 @@ jobs:
 
       - name: Run Gemini Review
         if: steps.diff.outputs.size > 0
+        continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -96,7 +97,7 @@ jobs:
           import time
 
           api_key = os.environ["GEMINI_API_KEY"]
-          models = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash"]
+          models = ["gemini-2.0-flash-lite", "gemini-2.5-flash-preview-05-20", "gemini-2.0-flash"]
           review = None
 
           for model in models:
@@ -127,8 +128,8 @@ jobs:
                   break
 
           if not review:
-              print("모든 모델에서 리뷰 실패. 워크플로우를 종료합니다.")
-              sys.exit(1)
+              print("모든 모델에서 리뷰 실패. (quota 초과 또는 API 오류)")
+              sys.exit(0)
 
           # PR에 코멘트 추가
           pr_number = os.environ["PR_NUMBER"]
