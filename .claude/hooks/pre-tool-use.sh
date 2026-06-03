@@ -31,19 +31,19 @@ if [[ "$TOOL_NAME" != "Bash" ]]; then
 fi
 
 # ── 1. force push 차단 ─────────────────────────────────────────
-if printf '%s' "$COMMAND" | grep -qE 'git push.*(--force|-f)'; then
+if printf '%s' "$COMMAND" | grep -qE 'git push.*[[:space:]]+(--force|-f)([[:space:]]|$)'; then
   printf '[BLOCKED] force push는 허용되지 않습니다. 팀원과 협의하세요.\n' >&2
   exit 2
 fi
 
 # ── 2. 보호 브랜치 직접 push 차단 ────────────────────────────
-if printf '%s' "$COMMAND" | grep -qE 'git push[^|&;]*(origin)?\s+(main|develop|master)\b'; then
+if printf '%s' "$COMMAND" | grep -qE 'git push[^|&;]*[[:space:]]+(main|develop|master)([[:space:]]|$)'; then
   printf '[BLOCKED] main/develop 브랜치에 직접 push할 수 없습니다. PR을 사용하세요.\n' >&2
   exit 2
 fi
 
 # ── 3. rm -rf 차단 ────────────────────────────────────────────
-if printf '%s' "$COMMAND" | grep -qE 'rm\s+-[a-z]*r[a-z]*f|rm\s+-[a-z]*f[a-z]*r'; then
+if printf '%s' "$COMMAND" | grep -qE 'rm[[:space:]]+-[a-z]*r[a-z]*f|rm[[:space:]]+-[a-z]*f[a-z]*r'; then
   printf '[BLOCKED] rm -rf는 허용되지 않습니다.\n' >&2
   exit 2
 fi
@@ -62,7 +62,7 @@ if printf '%s' "$COMMAND" | grep -qE '(rm|drop|delete|truncate).*(&&|\|\||;).*(r
 fi
 
 # ── 6. 시크릿 패턴 감지 ──────────────────────────────────────
-if printf '%s' "$COMMAND" | grep -qiE '(password|secret|token|api.key)\s*=\s*["\x27][^"\x27]{8,}'; then
+if printf '%s' "$COMMAND" | grep -qiE "(password|secret|token|api.key)[[:space:]]*=[[:space:]]*[\"'][^\"']{8,}"; then
   printf '[WARNING] 명령에 시크릿 값이 포함된 것 같습니다. 환경변수를 사용하세요.\n' >&2
   # 경고만 하고 차단하지는 않음 (exit 0)
 fi
